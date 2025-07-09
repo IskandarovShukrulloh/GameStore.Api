@@ -1,12 +1,13 @@
 using System.Reflection.Metadata.Ecma335;
 using GameStore.Api.DTOs;
+using Microsoft.AspNetCore.Mvc;
 var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 
 // CONSTANTS & main endpoints
 const string GetGameByIdName = "GetGame";
-app.MapGet("/", () => "Welcome to the Game Store! Here you can find a variety of games to enjoy.");
+app.MapGet("/", () => "Welcome to the Game Store! Here you can find a variety of games to enjoy!");
 app.MapGet("/main", () => "main page, but not ready yet! Please check back later.");
 
 // SAMPLE DATA for the games
@@ -70,5 +71,33 @@ app.MapPost("/games", (CreateGameDTO newGame) =>
     return Results.CreatedAtRoute(GetGameByIdName, new { id = game.Id }, game);
 });
 
+// PUT /games/{id}
+app.MapPut("games/{id}", (int id, UpdateGameDTO updatedGame) =>
+{
+    // Check if game with given ID exists
+    int index = games.FindIndex(game => game.Id == id);
+
+    if (index == -1)
+        return Results.NotFound(); // 404 Not Found
+
+    games[index] = new GameDTO
+    {
+        Id = id, // Keep the same ID
+        Name = updatedGame.Name,
+        Genre = updatedGame.Genre,
+        Price = updatedGame.Price,
+        ReleaseDate = updatedGame.ReleaseDate
+    };
+
+    return Results.NoContent(); // 204 No Content
+});
+
+// DELETE /games/{id}
+app.MapDelete("/games/{id:int}", (int id) =>
+{
+    games.RemoveAll(game => game.Id == id);
+
+    return Results.NoContent(); // 204 No Content
+});
 
 app.Run();

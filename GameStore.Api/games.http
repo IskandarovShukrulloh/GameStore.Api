@@ -2,7 +2,7 @@
 GET http://localhost:5236/games
 
 ### Find game by id
-GET http://localhost:5236/games/7
+GET http://localhost:5236/games/2
 
 ### Create a new game
 POST http://localhost:5236/games
@@ -14,3 +14,18 @@ Content-Type: application/json
   "price": 19.99,
   "releaseDate": "2011-11-18"
 }
+
+### Update an existing game
+PUT http://localhost:5236/games/2
+Content-Type: application/json
+
+{
+  "id": 2,
+  "name": "Counter-Strike 2",
+  "genre": "Shooter",
+  "price": 14.99,
+  "releaseDate": "2023-09-27"
+}
+
+### Delete a game
+DELETE http://localhost:5236/games/2
