@@ -1,8 +1,15 @@
+using System.Reflection.Metadata.Ecma335;
 using GameStore.Api.DTOs;
 var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 
+// CONSTANTS & main endpoints
+const string GetGameByIdName = "GetGame";
+app.MapGet("/", () => "Welcome to the Game Store! Here you can find a variety of games to enjoy.");
+app.MapGet("/main", () => "main page, but not ready yet! Please check back later.");
+
+// SAMPLE DATA for the games
 List<GameDTO> games = [
     new GameDTO
     {
@@ -15,14 +22,6 @@ List<GameDTO> games = [
     new GameDTO
     {
         Id = 2,
-        Name = "Manor Lords",
-        Genre = "Strategy",
-        Price = 19.99m,
-        ReleaseDate = new DateOnly(2024, 4, 26)
-    },
-    new GameDTO
-    {
-        Id = 3,
         Name = "Cities: Skylines II",
         Genre = "Simulation",
         Price = 33.99m,
@@ -30,15 +29,7 @@ List<GameDTO> games = [
     },
     new GameDTO
     {
-        Id = 4,
-        Name = "Counter-Strike 2",
-        Genre = "Shooter",
-        Price = 15.00m, // But free to play
-        ReleaseDate = new DateOnly(2023, 9, 27)
-    },
-    new GameDTO
-    {
-        Id = 5,
+        Id = 3,
         Name = "Assassin's Creed Origins",
         Genre = "Action",
         Price = 29.99m,
@@ -46,11 +37,38 @@ List<GameDTO> games = [
     },  
 ];
 
-app.MapGet("/", () => "Welcome to the Game Store! Here you can find a variety of games to enjoy.");
-app.MapGet("/main", () => "main page, but not ready yet! Please check back later.");
-
 // GET /games
-// Returns a list of games
 app.MapGet("/games", () =>  Results.Ok(games));
+
+// GET /games/{id}
+app.MapGet("/games/{id:int}", (int id) =>
+{
+    // If game with given ID exists
+    var game = games.Find(game => game.Id == id);
+    return game is null
+        ? Results.NotFound()
+        : Results.Ok(game);
+}).WithName(GetGameByIdName); // Name
+
+// POST /games
+app.MapPost("/games", (CreateGameDTO newGame) => 
+{
+    // New game with the provided data
+    var game = new GameDTO
+    {
+        Id = games.Count + 1, // ID generation
+        Name = newGame.Name,
+        Genre = newGame.Genre,
+        Price = newGame.Price,
+        ReleaseDate = newGame.ReleaseDate
+    };
+
+    // Add new game to list
+    games.Add(game);
+
+    // Return new game with 201 status code
+    return Results.CreatedAtRoute(GetGameByIdName, new { id = game.Id }, game);
+});
+
 
 app.Run();
