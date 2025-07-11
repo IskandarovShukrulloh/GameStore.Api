@@ -2,7 +2,7 @@
 GET http://localhost:5236/games
 
 ### Find game by id
-GET http://localhost:5236/games/2
+GET http://localhost:5236/games/3
 
 ### Create a new game
 POST http://localhost:5236/games
@@ -28,4 +28,4 @@ Content-Type: application/json
 }
 
 ### Delete a game
-DELETE http://localhost:5236/games/2
+DELETE http://localhost:5236/games/4
