@@ -1,2 +1,2 @@
-My pet project before going wild on real ones
+My pet project before going wild on real ones.
 not open-source so go cry...
