@@ -1,11 +1,20 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace GameStore.Api.DTOs;
 
 public record class CreateGameDTO
 {
-    public string Name { get; init; } = string.Empty;
+    [Required]
+    [StringLength(50)]
+    public string Name { get; init; }
 
-    public string Genre { get; init; } = string.Empty;
+    [Required]
+    [StringLength(20)]
+    public string Genre { get; init; }
 
+    [Range(0, 696.9)]
     public decimal Price { get; init; }
+
+    [Required]
     public DateOnly ReleaseDate { get; init; }
 }

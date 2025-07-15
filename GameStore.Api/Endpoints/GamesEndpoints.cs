@@ -1,4 +1,5 @@
 using GameStore.Api.DTOs;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace GameStore.Api.Endpoints;
 
@@ -11,9 +12,9 @@ public static class GamesEndpoints
         new GameDTO
     {
         Id = 1,
-        Name = "R.E.P.O",
-        Genre = "Horror",
-        Price = 6.29m,
+        Name = "The Legend of Zelda: Tears of the Kingdom",
+        Genre = "Adventure",
+        Price = 59.99m,
         ReleaseDate = new DateOnly(2025, 2, 26)
     },
     new GameDTO
@@ -36,7 +37,7 @@ public static class GamesEndpoints
 
     public static RouteGroupBuilder MapGamesEndpoints(this WebApplication app)
     {
-        var group = app.MapGroup("/games");
+        var group = app.MapGroup("/games").WithParameterValidation();
 
         /// GET /games
         group.MapGet("/", () =>  Results.Ok(games));
@@ -99,7 +100,7 @@ public static class GamesEndpoints
     /// DELETE /games/{id}
     group.MapDelete("/{id:int}", (int id) =>
     {
-        games.RemoveAll(game => game.Id == id);
+        var removeCount = games.RemoveAll(game => game.Id == id);
 
         if (games.Count == 0)
             return Results.NotFound(); // 404 Not Found if no games left
@@ -110,3 +111,4 @@ public static class GamesEndpoints
         return group;
 }
 }
+    
