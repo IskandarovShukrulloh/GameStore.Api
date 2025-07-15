@@ -100,7 +100,7 @@ public static class GamesEndpoints
     /// DELETE /games/{id}
     group.MapDelete("/{id:int}", (int id) =>
     {
-        var removeCount = games.RemoveAll(game => game.Id == id);
+        games.RemoveAll(game => game.Id == id);
 
         if (games.Count == 0)
             return Results.NotFound(); // 404 Not Found if no games left
@@ -109,6 +109,4 @@ public static class GamesEndpoints
     });
 
         return group;
-}
-}
-    
+}}    
