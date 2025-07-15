@@ -1,5 +1,4 @@
 using GameStore.Api.DTOs;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace GameStore.Api.Endpoints;
 
@@ -40,7 +39,7 @@ public static class GamesEndpoints
         var group = app.MapGroup("/games").WithParameterValidation();
 
         /// GET /games
-        group.MapGet("/", () =>  Results.Ok(games));
+        group.MapGet("/", () => Results.Ok(games));
 
         /// GET /games/{id}
         group.MapGet("/{id:int}", (int id) =>
@@ -56,59 +55,58 @@ public static class GamesEndpoints
             : Results.Ok(game);
     }).WithName(GetGameById); // Name for endpoint to get a game by ID
 
-    /// POST /games
-    group.MapPost("/", (CreateGameDTO newGame) => 
-    {
-        // New game with the provided data
-        var game = new GameDTO
+        /// POST /games
+        group.MapPost("/", (CreateGameDTO newGame) =>
         {
-            Id = games.Count + 1, // ID generation
-            Name = newGame.Name,
-            Genre = newGame.Genre,
-            Price = newGame.Price,
-            ReleaseDate = newGame.ReleaseDate
-        };
+            // New game with the provided data
+            var game = new GameDTO
+            {
+                Id = games.Count + 1, // ID generation
+                Name = newGame.Name,
+                Genre = newGame.Genre,
+                Price = newGame.Price,
+                ReleaseDate = newGame.ReleaseDate
+            };
 
-        // Add new game to list
-        games.Add(game);
+            // Add new game to list
+            games.Add(game);
 
-        // Return new game with 201 status code
-        return Results.CreatedAtRoute(GetGameById, new { id = game.Id }, game);
-    });     
+            // Return new game with 201 status code
+            return Results.CreatedAtRoute(GetGameById, new { id = game.Id }, game);
+        });
 
-    /// PUT /games/{id}
-    group.MapPut("/{id}", (int id, UpdateGameDTO updatedGame) =>
-    {
-        // Check if game with given ID exists
-        int index = games.FindIndex(game => game.Id == id);
+        /// PUT /games/{id}
+        group.MapPut("/{id}", (int id, UpdateGameDTO updatedGame) =>
+        {
+            // Check if game with given ID exists
+            int index = games.FindIndex(game => game.Id == id);
 
-        if (index == -1)
-            return Results.NotFound(); // 404 Not Found
+            if (index == -1)
+                return Results.NotFound(); // 404 Not Found
 
-        games[index] = new GameDTO
-        {   
-            Id = id, // Keep the same ID
-            Name = updatedGame.Name,
-            Genre = updatedGame.Genre,
-            Price = updatedGame.Price,
-            ReleaseDate = updatedGame.ReleaseDate
-        };
+            games[index] = new GameDTO
+            {
+                Id = id, // Keep the same ID
+                Name = updatedGame.Name,
+                Genre = updatedGame.Genre,
+                Price = updatedGame.Price,
+                ReleaseDate = updatedGame.ReleaseDate
+            };
 
-        return Results.NoContent(); // 204 No Content
-    });
+            return Results.NoContent(); // 204 No Content
+        });
 
-    /// DELETE /games/{id}
-    group.MapDelete("/{id:int}", (int id) =>
-    {
-        var removeCount = games.RemoveAll(game => game.Id == id);
+        /// DELETE /games/{id}
+        group.MapDelete("/{id:int}", (int id) =>
+        {
+            games.RemoveAll(game => game.Id == id);
 
-        if (games.Count == 0)
-            return Results.NotFound(); // 404 Not Found if no games left
+            if (games.Count == 0)
+                return Results.NotFound(); // 404 Not Found if no games left
 
-        return Results.NoContent(); // 204 No Content
-    });
+            return Results.NoContent(); // 204 No Content
+        });
 
         return group;
+    }
 }
-}
-    

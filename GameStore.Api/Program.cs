@@ -10,3 +10,4 @@ app.MapGet("/main", () => "main page, but not ready yet! Please check back later
 app.MapGamesEndpoints();
 
 app.Run();
+    
