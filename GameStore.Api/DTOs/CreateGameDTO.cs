@@ -6,11 +6,11 @@ public record class CreateGameDTO
 {
     [Required]
     [StringLength(50)]
-    public string Name { get; init; }
+    public required string Name { get; init; }
 
     [Required]
     [StringLength(20)]
-    public string Genre { get; init; }
+    public required string Genre { get; init; }
 
     [Range(0, 696.9)]
     public decimal Price { get; init; }
