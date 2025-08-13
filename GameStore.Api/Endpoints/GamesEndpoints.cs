@@ -1,4 +1,6 @@
+using GameStore.Api.Data;
 using GameStore.Api.DTOs;
+using GameStore.Api.Entities;
 
 namespace GameStore.Api.Endpoints;
 
@@ -31,7 +33,7 @@ public static class GamesEndpoints
         Genre = "Action",
         Price = 29.99m,
         ReleaseDate = new DateOnly(2017, 10, 27)
-    },
+    }
 ];
 
     public static RouteGroupBuilder MapGamesEndpoints(this WebApplication app)
@@ -56,20 +58,20 @@ public static class GamesEndpoints
     }).WithName(GetGameById); // Name for endpoint to get a game by ID
 
         /// POST /games
-        group.MapPost("/", (CreateGameDTO newGame) =>
+        group.MapPost("/", (CreateGameDTO newGame, GameStoreContext dbContext) =>
         {
             // New game with the provided data
-            var game = new GameDTO
+            Game game = new()
             {
-                Id = games.Count + 1, // ID generation
                 Name = newGame.Name,
-                Genre = newGame.Genre,
+                Genre = dbContext.Genres.Find(newGame.GenreId),
+                GenreId = newGame.GenreId,
                 Price = newGame.Price,
                 ReleaseDate = newGame.ReleaseDate
             };
 
-            // Add new game to list
-            games.Add(game);
+            dbContext.Games.Add(game);
+            dbContext.SaveChanges();
 
             // Return new game with 201 status code
             return Results.CreatedAtRoute(GetGameById, new { id = game.Id }, game);

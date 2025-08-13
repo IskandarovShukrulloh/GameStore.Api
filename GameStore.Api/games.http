@@ -10,7 +10,7 @@ Content-Type: application/json
 
 {
   "name": "Minecraft",
-  "genre": "Sandbox",
+  "genreId": 4,
   "price": 26.95,
   "releaseDate": "2011-11-18"
 }
@@ -22,7 +22,7 @@ Content-Type: application/json
 {
   "id": 2,
   "name": "Counter-Strike 2",
-  "genre": "Shooter",
+  "genreId": 2,
   "price": 14.99,
   "releaseDate": "2023-09-27"
 }
