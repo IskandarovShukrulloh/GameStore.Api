@@ -1,7 +1,3 @@
-using GameStore.Api.Data;
-using GameStore.Api.Endpoints;
-using Microsoft.EntityFrameworkCore;
-
 var builder = WebApplication.CreateBuilder(args);
 
 var connString = builder.Configuration.GetConnectionString("GameStore");
